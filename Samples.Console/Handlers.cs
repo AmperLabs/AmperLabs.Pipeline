@@ -3,9 +3,26 @@ using System;
 
 namespace Samples.Console;
 
-public class Handler1 : PipelineHandlerBase<string>
+public class Handler1 : IPipelineHandler<string>
 {
-    protected override string Handle(string data)
+    public string Handle(string data)
+    {
+        System.Console.WriteLine($"Handler {this.GetType().Name} is handling {data}.");
+
+        PrintSignature();
+
+        return data += $" (modified by [{this.GetType().Name}])";
+    }
+
+    private void PrintSignature()
+    {
+        System.Console.WriteLine("== I am the signature of Handler 1 ==");
+    }
+}
+
+public class Handler2 : IPipelineHandler<string>
+{
+    public string Handle(string data)
     {
         System.Console.WriteLine($"Handler {this.GetType().Name} is handling {data}.");
 
@@ -13,13 +30,12 @@ public class Handler1 : PipelineHandlerBase<string>
     }
 }
 
-public class Handler2 : PipelineHandlerBase<string>, IPipelineHandler<string>
+public class AsyncHandler1 : IAsyncPipelineHandler<string>
 {
-    protected override string Handle(string data)
+    public async Task<string> Handle(string data)
     {
-        System.Console.WriteLine($"Handler {this.GetType().Name} is handling {data}.");
-
-        return data += $" (modified by [{this.GetType().Name}])";
+        System.Console.WriteLine($"Handler {this.GetType().Name} is handling '{data}'.");
+        await Task.Delay(10);
+        return data;
     }
 }
-

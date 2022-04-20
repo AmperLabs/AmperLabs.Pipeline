@@ -2,34 +2,40 @@ namespace Neumannalex.Pipeline;
 
 public class Pipeline<TData> where TData : class
 {
-    private List<IPipelineHandler<TData>> _handlers = new List<IPipelineHandler<TData>>();
-
-    private void AddHandler(IPipelineHandler<TData> handler)
+    private List<Func<TData, TData>> _handlers = new List<Func<TData, TData>>();
+    
+    public void AddHandler(Func<TData, TData> handler)
     {
-        if(_handlers.Count > 0)
-            _handlers.Last().SetNext(handler);
-        
         _handlers.Add(handler);
+    }
+
+    public void AddHandler(IPipelineHandler<TData> handler)
+    {
+        _handlers.Add(handler.Handle);
     }
 
     public Pipeline()
     {
-        _handlers = new List<IPipelineHandler<TData>>();
+        _handlers = new List<Func<TData, TData>>();
     }
 
-    public Pipeline(IEnumerable<IPipelineHandler<TData>> handlers)
+    public Pipeline(IEnumerable<Func<TData, TData>> handlers)
     {
-        _handlers = new List<IPipelineHandler<TData>>();
-        
+        _handlers = new List<Func<TData, TData>>();
+
         foreach(var handler in handlers)
             AddHandler(handler);
     }
 
     public TData Execute(TData data)
     {
-        if(_handlers == null || _handlers.Count == 0)
-            throw new ArgumentNullException("No handler was set.");
+        var handledData = data;
 
-        return _handlers.First().Execute(data);
+        foreach(var handler in _handlers)
+        {
+            handledData = handler(handledData);
+        }
+
+        return handledData;
     }
 }
