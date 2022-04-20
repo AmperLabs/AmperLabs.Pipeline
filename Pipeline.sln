@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neumannalex.Pipeline", "Neumannalex.Pipeline\Neumannalex.Pipeline.csproj", "{FB9ADA94-BBD1-479F-AA57-494E098E6691}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{F461AD08-5FD9-4435-A978-6848A0DF341C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Console", "Samples.Console\Samples.Console.csproj", "{BDEE8127-694F-4B3D-896D-2BF6396D77F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{FB9ADA94-BBD1-479F-AA57-494E098E6691}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB9ADA94-BBD1-479F-AA57-494E098E6691}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB9ADA94-BBD1-479F-AA57-494E098E6691}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F461AD08-5FD9-4435-A978-6848A0DF341C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F461AD08-5FD9-4435-A978-6848A0DF341C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F461AD08-5FD9-4435-A978-6848A0DF341C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F461AD08-5FD9-4435-A978-6848A0DF341C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDEE8127-694F-4B3D-896D-2BF6396D77F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDEE8127-694F-4B3D-896D-2BF6396D77F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDEE8127-694F-4B3D-896D-2BF6396D77F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDEE8127-694F-4B3D-896D-2BF6396D77F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
