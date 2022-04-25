@@ -4,38 +4,40 @@ using Samples.Console;
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("Hello, World!");
 
-var pipeline = PipelineBuilder<string>
-    .CreatePipeline()
-    .WithHandler(new Handler1())
-    .WithHandler(x => $"Handled by handler 1.5 {x}")
-    .WithHandler(new Handler2())
-    .WithHandler(x => {
-        return $"Another handler handled '{x}'";
+var pipeline = new Pipeline<string>()
+    .Configure(x => {
+        x.ContinueOnException = true;
     })
-    .Build();
-
-var result = pipeline.Execute("test");
-Console.WriteLine($"Result: {result}");
-
-Console.WriteLine("---------------------------------------------------------");
-
-var asyncPipeline = AsyncPipelineBuilder<string>
-    .CreatePipeline()
-    .WithHandler(async x => {
-        Console.WriteLine($"Received '{x}' at {DateTime.Now} in step 1");
-        return await Task.FromResult(x);
-    })
-    .WithHandler(async x => {
-        Console.WriteLine($"Received '{x}' at {DateTime.Now} in step 2");
-        await Task.Delay(2000);
+    .AddHandler(x => x.ToUpper())
+    .AddHandler("Faulty step", x => {
+        throw new Exception("test");
         return x;
     })
-    .WithHandler(async x => {
-        Console.WriteLine($"Received '{x}' at {DateTime.Now} in step 3");
-        return await Task.FromResult(x);
-    })
-    .WithHandler(new AsyncHandler1())
-    .Build();
+    .AddHandler(x => x.ToLower());
 
-var asyncResult = await asyncPipeline.Execute("test");
-Console.WriteLine($"Result: {asyncResult}");
+
+try
+{
+    var result = await pipeline.ExecuteAsync("test");
+    Console.WriteLine($"Result: {result}");
+
+    if(pipeline.Configuration.ContinueOnException && pipeline.HasExceptions)
+    {
+        Console.WriteLine(
+            pipeline.Exceptions.Count == 1 ?
+            "There was one exceptions thrown while executing the pipeline." :
+            $"There where {pipeline.Exceptions.Count} exceptions thrown while executing the pipeline.");
+
+        pipeline.Exceptions.ForEach(x => {
+            Console.WriteLine(x.Message);
+            if(x.InnerException != null)
+            {
+                Console.WriteLine($"Inner exception: {x.InnerException.Message}");
+            }
+        });
+    }
+}
+catch
+{
+    Console.WriteLine("Caught exception");
+}

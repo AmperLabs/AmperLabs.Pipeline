@@ -2,38 +2,109 @@ namespace Neumannalex.Pipeline;
 
 public class Pipeline<TData> where TData : class
 {
-    private List<Func<TData, TData>> _handlers = new List<Func<TData, TData>>();
+    private List<PipelineItem<TData>> _items = new List<PipelineItem<TData>>();
+
+    public PipelineConfiguration Configuration { get; set; } = new PipelineConfiguration();
+
+    public List<Exception> Exceptions { get; set; } = new List<Exception>();
+
+    public bool HasExceptions => Exceptions.Count > 0;
+
+    public bool HasHandlers => _items.Count > 0;
     
-    public void AddHandler(Func<TData, TData> handler)
+    public Pipeline<TData> Configure(Action<PipelineConfiguration> config)
     {
-        _handlers.Add(handler);
+        if(config != null)
+            config(Configuration);
+
+        return this;
     }
 
-    public void AddHandler(IPipelineHandler<TData> handler)
+    public Pipeline<TData> AddHandler(Func<TData, Task<TData>> handler)
     {
-        _handlers.Add(handler.Handle);
+        AddHandler(_items.Count.ToString(), handler);
+        return this;
     }
 
-    public Pipeline()
+    public Pipeline<TData> AddHandler(string id, Func<TData, Task<TData>> handler)
     {
-        _handlers = new List<Func<TData, TData>>();
+        _items.Add(new PipelineItem<TData>{
+            Id = id,
+            Handler = handler
+        });
+
+        return this;
     }
 
-    public Pipeline(IEnumerable<Func<TData, TData>> handlers)
+    public Pipeline<TData> AddHandler(IAsyncPipelineHandler<TData> handler)
     {
-        _handlers = new List<Func<TData, TData>>();
+        return AddHandler(_items.Count.ToString(), handler);
+    }
 
+    public Pipeline<TData> AddHandler(string id, IAsyncPipelineHandler<TData> handler)
+    {
+        _items.Add(new PipelineItem<TData>{
+            Id = id,
+            Handler = handler.Handle
+        });
+
+        return this;
+    }
+
+    public Pipeline<TData> AddHandler(IPipelineHandler<TData> handler)
+    {
+        return AddHandler(_items.Count.ToString(), handler);
+    }
+
+    public Pipeline<TData> AddHandler(string id, IPipelineHandler<TData> handler)
+    {
+        return AddHandler(id, handler.Handle);
+    }
+
+    public Pipeline<TData> AddHandler(Func<TData, TData> handler)
+    {
+        AddHandler(_items.Count.ToString(), handler);
+        return this;
+    }
+
+    public Pipeline<TData> AddHandler(string id, Func<TData, TData> handler)
+    {
+        AddHandler(id, x => Task.FromResult(handler(x)));
+        return this;
+    }
+
+    public Pipeline(){ }
+
+    public Pipeline(IEnumerable<Func<TData, Task<TData>>> handlers, PipelineConfiguration configuration = null)
+    {
         foreach(var handler in handlers)
             AddHandler(handler);
+
+        if(configuration != null)
+            Configuration = configuration;
     }
 
-    public TData Execute(TData data)
+    public async Task<TData> ExecuteAsync(TData data)
     {
+        Exceptions.Clear();
+
         var handledData = data;
 
-        foreach(var handler in _handlers)
+        for(int i = 0; i < _items.Count; i++)
         {
-            handledData = handler(handledData);
+            try
+            {
+                handledData = await _items[i].Handler(handledData);
+            }
+            catch(Exception ex)
+            {
+                var pipelineEx = new PipelineException($"Exception was thrown in handler with Id '{_items[i].Id}' at position {i} in the pipeline.", ex);
+                
+                Exceptions.Add(pipelineEx);
+
+                if(!Configuration.ContinueOnException)
+                    throw pipelineEx;
+            }
         }
 
         return handledData;
