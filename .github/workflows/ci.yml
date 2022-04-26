@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    env:
+      BUILD_CONFIG: 'Release'
+      SOLUTION: 'AmperLabs.Pipeline.sln'
+      
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: '5.x'
+                
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Determine package version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+        with:
+          useConfigFile: true
+          configFilePath: ./.github/gitversion.yml
+      
+      - name: Restore dependencies
+        run: dotnet restore
+        
+      - name: Build
+        run: dotnet build $SOLUTION --configuration $BUILD_CONFIG /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} /p:AssemblyVersion=${{ steps.gitversion.outputs.AssemblySemVer }} /p:InformationalVersion=${{ steps.gitversion.outputs.InformationalVersion }} --no-restore
+
+      - name: Run Tests
+        run: dotnet test --configuration $BUILD_CONFIG /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} --no-build --verbosity normal
+
+      - name: Create Nuget package
+        run: dotnet pack ApiResponse.sln --configuration $BUILD_CONFIG -o:package /p:PackageVersion=${{ steps.gitversion.outputs.AssemblySemVer }}
+
+      - name: Push package to nuget.org
+        run: dotnet nuget push ./package/*.nupkg --source https://nuget.pkg.github.com/threenine/index.json --api-key ${{ github.token }}
