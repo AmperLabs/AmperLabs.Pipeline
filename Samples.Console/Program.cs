@@ -1,4 +1,4 @@
-﻿using Neumannalex.Pipeline;
+﻿using AmperLabs.Pipeline;
 using Samples.Console;
 
 // See https://aka.ms/new-console-template for more information

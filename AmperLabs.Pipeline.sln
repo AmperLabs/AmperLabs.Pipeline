@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neumannalex.Pipeline", "Neumannalex.Pipeline\Neumannalex.Pipeline.csproj", "{FB9ADA94-BBD1-479F-AA57-494E098E6691}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmperLabs.Pipeline", "AmperLabs.Pipeline\AmperLabs.Pipeline.csproj", "{FB9ADA94-BBD1-479F-AA57-494E098E6691}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{F461AD08-5FD9-4435-A978-6848A0DF341C}"
 EndProject

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Neumannalex.Pipeline;
+using AmperLabs.Pipeline;
 
 namespace Tests;
 

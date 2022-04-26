@@ -1,4 +1,4 @@
-using Neumannalex.Pipeline;
+using AmperLabs.Pipeline;
 using System;
 
 namespace Samples.Console;

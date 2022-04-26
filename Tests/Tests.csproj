@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Neumannalex.Pipeline\Neumannalex.Pipeline.csproj" />
+    <ProjectReference Include="..\AmperLabs.Pipeline\AmperLabs.Pipeline.csproj" />
   </ItemGroup>
 
 </Project>

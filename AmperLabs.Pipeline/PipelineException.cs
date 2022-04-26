@@ -1,4 +1,4 @@
-namespace Neumannalex.Pipeline;
+namespace AmperLabs.Pipeline;
 
 public class PipelineException : Exception
 {

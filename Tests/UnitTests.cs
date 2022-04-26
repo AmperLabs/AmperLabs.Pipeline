@@ -1,6 +1,6 @@
 using Xunit;
 using FluentAssertions;
-using Neumannalex.Pipeline;
+using AmperLabs.Pipeline;
 using System;
 using System.Threading.Tasks;
 
