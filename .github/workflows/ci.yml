@@ -47,7 +47,7 @@ jobs:
         run: dotnet test --configuration $BUILD_CONFIG /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} --no-build --verbosity normal
 
       - name: Create Nuget package
-        run: dotnet pack ApiResponse.sln --configuration $BUILD_CONFIG -o:package /p:PackageVersion=${{ steps.gitversion.outputs.AssemblySemVer }}
+        run: dotnet pack $SOLUTION --configuration $BUILD_CONFIG -o:package /p:PackageVersion=${{ steps.gitversion.outputs.AssemblySemVer }}
 
       - name: Push package to nuget.org
         run: dotnet nuget push ./package/*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
