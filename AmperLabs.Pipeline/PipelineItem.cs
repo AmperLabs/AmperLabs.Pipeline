@@ -1,7 +1,10 @@
-namespace AmperLabs.Pipeline;
+using System;
+using System.Threading.Tasks;
 
-public class PipelineItem<TData> where TData : class
-{
-    public string Id { get; set; }
-    public Func<TData, Task<TData>> Handler { get; set; }
+namespace AmperLabs.Pipeline {
+    public class PipelineItem<TData> where TData : class
+    {
+        public string Id { get; set; }
+        public Func<TData, Task<TData>> Handler { get; set; }
+    }
 }

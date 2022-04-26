@@ -1,9 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    
+    <Version>1.0.0</Version>
+    <Authors>Alexander Neumann</Authors>
+    <Description>Adapted Chain Of Responsibility to handle generic processing steps, e.g. to make the business logic more explicit and readable by moving the actual logic of a process step into a handler.</Description>
+    
+    <PackageId>AmperLabs.Pipeline</PackageId>
+    <PackageTags></PackageTags>    
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/AmperLabs/AmperLabs.Pipeline.git</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
